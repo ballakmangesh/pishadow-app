@@ -1,1 +1,170 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PISHADOW - Connect Globally</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #080610;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 22px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #302044;
+    }
+
+    .logo {
+      color: #bd70ff;
+      font-size: 27px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 75px 20px 45px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 8vw, 65px);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span {
+      color: #b76aff;
+    }
+
+    .hero p {
+      color: #c5b9d5;
+      max-width: 550px;
+      margin: auto;
+      line-height: 1.7;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 14px 30px;
+      border: 0;
+      border-radius: 30px;
+      background: linear-gradient(90deg, #792cff, #c04cff);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .features {
+      max-width: 950px;
+      margin: 25px auto 65px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .feature {
+      background: #171020;
+      border: 1px solid #48246b;
+      border-radius: 18px;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .feature .emoji {
+      font-size: 34px;
+      margin-bottom: 14px;
+    }
+
+    .feature h3 {
+      color: #d5a3ff;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      color: #b8adc5;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      border-top: 1px solid #302044;
+      color: #9485a5;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">PISHADOW</div>
+    <div>🌍 Global Social</div>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to <span>PISHADOW</span></h1>
+    <p>
+      Connect with the world. Share your moments.
+      Make new friends and discover a new digital world
+      in every language.
+    </p>
+    <button class="button" onclick="welcome()">
+      Explore PISHADOW
+    </button>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <div class="emoji">📸</div>
+      <h3>Share Moments</h3>
+      <p>Share your photos, videos and special memories.</p>
+    </div>
+
+    <div class="feature">
+      <div class="emoji">💬</div>
+      <h3>Global Chat</h3>
+      <p>Connect and communicate with people worldwide.</p>
+    </div>
+
+    <div class="feature">
+      <div class="emoji">🌐</div>
+      <h3>All Languages</h3>
+      <p>Bring people together across languages and cultures.</p>
+    </div>
+
+    <div class="feature">
+      <div class="emoji">🚀</div>
+      <h3>New Experiences</h3>
+      <p>Discover communities and explore new possibilities.</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 PISHADOW. Connect. Share. Belong.
+  </footer>
+
+  <script>
+    function welcome() {
+      alert("Welcome to PISHADOW! Your global social journey starts here.");
+    }
+  </script>
+
+</body>
+</html>
+
