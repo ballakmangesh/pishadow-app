@@ -238,6 +238,16 @@ document.getElementById("photo-upload").onchange = function(event) {
   }
 };
   </script>
+  <script>
+const bio = document.getElementById("profile-bio");
+
+bio.value = localStorage.getItem("pishadow-bio") || "";
+
+document.getElementById("save-bio").onclick = function() {
+  localStorage.setItem("pishadow-bio", bio.value);
+  document.getElementById("bio-message").innerText = "Bio Saved Successfully! 💜";
+};
+  </script>
 </body>
 </html>
 
