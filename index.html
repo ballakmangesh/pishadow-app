@@ -259,6 +259,24 @@ document.getElementById("save-bio").onclick = function() {
   document.getElementById("bio-message").innerText = "Bio Saved Successfully! 💜";
 };
   </script>
+  <script>
+let isFollowing = false;
+let followingCount = 0;
+
+document.getElementById("follow-btn").onclick = function() {
+  isFollowing = !isFollowing;
+
+  if (isFollowing) {
+    followingCount++;
+    this.innerText = "Following";
+  } else {
+    followingCount--;
+    this.innerText = "Follow";
+  }
+
+  document.getElementById("following-count").innerText = followingCount;
+};
+  </script>
 </body>
 </html>
 
