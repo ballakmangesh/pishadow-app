@@ -194,8 +194,8 @@ document.getElementById("pi-login").onclick = async function () {
     if (!response.ok) {
       throw new Error(result.error || "Login failed");
     }
-
-    alert("Welcome to PISHADOW, " + result.username);
+document.getElementById("pi-login").innerText =
+  "Welcome, " + result.username;
   } catch (error) {
     alert("Pi Login Error: " + error.message);
   }
