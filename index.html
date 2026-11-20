@@ -171,6 +171,7 @@
   <button id="pi-login">Login with Pi</button>
 
 <script>
+<script>
 document.getElementById("pi-login").onclick = async function () {
   try {
     const auth = await Pi.authenticate(
@@ -180,9 +181,23 @@ document.getElementById("pi-login").onclick = async function () {
       }
     );
 
-    alert("Welcome " + auth.user.username);
+    const response = await fetch("/api/auth/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken: auth.accessToken
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Login failed");
+    }
+
+    alert("Welcome to PISHADOW, " + result.username);
   } catch (error) {
-    alert("Pi Login failed: " + error.message);
+    alert("Pi Login Error: " + error.message);
   }
 };
 </script>
