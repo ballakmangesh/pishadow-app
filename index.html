@@ -168,6 +168,24 @@
 <script>
   Pi.init({ version: "2.0" });
 </script>
+  <button id="pi-login">Login with Pi</button>
+
+<script>
+document.getElementById("pi-login").onclick = async function () {
+  try {
+    const auth = await Pi.authenticate(
+      ["username"],
+      function (payment) {
+        console.log("Incomplete payment:", payment);
+      }
+    );
+
+    alert("Welcome " + auth.user.username);
+  } catch (error) {
+    alert("Pi Login failed: " + error.message);
+  }
+};
+</script>
 </body>
 </html>
 
