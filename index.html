@@ -210,6 +210,8 @@ document.getElementById("pi-login").onclick = async function () {
     }
 document.getElementById("pi-login").innerText =
   "Welcome, " + result.username;
+    document.getElementById("profile").style.display = "block";
+document.getElementById("profile-username").innerText = result.username;
   } catch (error) {
     alert("Pi Login Error: " + error.message);
   }
