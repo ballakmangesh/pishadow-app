@@ -244,10 +244,22 @@ document.getElementById("photo-upload").onchange = function(event) {
   const file = event.target.files[0];
 
   if (file) {
-    document.getElementById("profile-photo").src =
-      URL.createObjectURL(file);
+    const reader = new FileReader();
+
+    reader.onload = function() {
+      localStorage.setItem("pishadow-photo", reader.result);
+      document.getElementById("profile-photo").src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
   }
 };
+
+const savedPhoto = localStorage.getItem("pishadow-photo");
+
+if (savedPhoto) {
+  document.getElementById("profile-photo").src = savedPhoto;
+}
   </script>
   <script>
 const bio = document.getElementById("profile-bio");
