@@ -170,7 +170,21 @@
   console.log("Pi SDK initialized");
 </script>
   <button id="pi-login">Login with Pi</button>
+<div id="profile" style="display:none; text-align:center; margin:30px auto; padding:25px; background:#171020; border:1px solid #48246b; border-radius:18px; max-width:400px;">
 
+  <h2 style="color:#bd70ff;">My PISHADOW Profile</h2>
+
+  <div style="font-size:60px; margin:15px;">👤</div>
+
+  <h3 id="profile-username">Username</h3>
+
+  <p id="profile-bio" style="color:#c5b9d5; margin:15px;">
+    Welcome to my profile!
+  </p>
+
+  <p style="color:#bd70ff;">Followers: 0 | Following: 0</p>
+
+</div>
 <script>
 document.getElementById("pi-login").onclick = async function () {
   try {
