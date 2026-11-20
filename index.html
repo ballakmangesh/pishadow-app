@@ -228,6 +228,16 @@ document.getElementById("profile-username").innerText = result.username;
   }
 };
 </script>
+  <script>
+document.getElementById("photo-upload").onchange = function(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+    document.getElementById("profile-photo").src =
+      URL.createObjectURL(file);
+  }
+};
+  </script>
 </body>
 </html>
 
