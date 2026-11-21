@@ -193,13 +193,18 @@ Save Bio
   <div style="font-size:60px; margin:15px;">👤</div>
 
   <h3 id="profile-username">Username</h3>
-
+loadFollowStats();
  
 
   <div style="color:#bd70ff; margin:20px;">
   <p>Followers: <span id="followers-count">0</span></p>
   <p>Following: <span id="following-count">0</span></p>
-
+<input
+  id="following-uid"
+  type="text"
+  placeholder="Enter Pi User UID"
+  style="width:90%;padding:12px;margin:10px;border-radius:10px;background:#171020;color:white;border:1px solid #bd70ff;"
+>
   <button id="follow-btn"
   style="background:#bd70ff;color:white;padding:12px 25px;border:0;border-radius:10px;margin:10px;">
   Follow
@@ -226,6 +231,8 @@ document.getElementById("pi-login").onclick = async function () {
     });
 
     const result = await response.json();
+    window.pishadowAccessToken = auth.accessToken;
+window.pishadowUid = result.uid;
 
     if (!response.ok) {
       throw new Error(result.error || "Login failed");
@@ -234,6 +241,7 @@ document.getElementById("pi-login").innerText =
   "Welcome, " + result.username;
     document.getElementById("profile").style.display = "block";
 document.getElementById("profile-username").innerText = result.username;
+    loadFollowStats();
   } catch (error) {
     alert("Pi Login Error: " + error.message);
   }
@@ -272,23 +280,85 @@ document.getElementById("save-bio").onclick = function() {
 };
   </script>
   <script>
-let isFollowing = false;
-let followingCount = 0;
 
-document.getElementById("follow-btn").onclick = function() {
-  isFollowing = !isFollowing;
+  </script>
+<script>
+async function loadFollowStats() {
+  if (!window.pishadowAccessToken) return;
 
-  if (isFollowing) {
-    followingCount++;
-    this.innerText = "Following";
-  } else {
-    followingCount--;
-    this.innerText = "Follow";
+  try {
+    const response = await fetch("/api/follows", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken: window.pishadowAccessToken,
+        action: "stats"
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      document.getElementById("following-count").innerText =
+        result.followingCount;
+    }
+  } catch (error) {
+    console.error("Follow stats error:", error);
+  }
+}
+
+document.getElementById("follow-btn").onclick = async function() {
+  const followingId =
+    document.getElementById("following-uid").value.trim();
+
+  if (!window.pishadowAccessToken) {
+    alert("Please login with Pi first.");
+    return;
   }
 
-  document.getElementById("following-count").innerText = followingCount;
+  if (!followingId) {
+    alert("Enter another Pi user's UID.");
+    return;
+  }
+
+  if (followingId === window.pishadowUid) {
+    alert("You cannot follow yourself.");
+    return;
+  }
+
+  this.disabled = true;
+
+  try {
+    const response = await fetch("/api/follows", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken: window.pishadowAccessToken,
+        action: "follow",
+        followingId: followingId
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Follow failed");
+    }
+
+    document.getElementById("following-count").innerText =
+      result.followingCount;
+
+    this.innerText = "Following";
+    alert("Follow saved successfully! 💜");
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    this.disabled = false;
+  }
 };
-  </script>
+</script>
+
 </body>
 </html>
 
