@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090611">
+  <title>P!Vibes | Create. Feel. Share.</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #090611;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 15px;
+      color: white;
+      background: #8b35d6;
+    }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: #100b1c;
+      border-bottom: 1px solid #30203e;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .logo { color: #c77aff; font-size: 25px; font-weight: 900; }
+    .tagline { color: #a99bb8; font-size: 11px; margin-top: 3px; }
+    main { max-width: 650px; margin: auto; padding: 14px; }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 5px 0 14px;
+    }
+    .toolbar button { white-space: nowrap; }
+    .secondary { background: #21152f; border: 1px solid #54336d; }
+    .panel {
+      background: #140e20;
+      border: 1px solid #332342;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .panel h2 { font-size: 18px; margin: 0 0 12px; }
+    input, textarea {
+      width: 100%;
+      color: white;
+      background: #090611;
+      border: 1px solid #49345b;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 6px 0;
+    }
+    textarea { min-height: 75px; resize: vertical; }
+    .hint { color: #aa9bb8; font-size: 12px; line-height: 1.5; }
+    .video-card {
+      background: #100b19;
+      border: 1px solid #39234d;
+      border-radius: 17px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .video-area {
+      position: relative;
+      background: #050408;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-area video {
+      display: block;
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+    }
+    .video-placeholder {
+      color: #9d83b2;
+      padding: 40px 15px;
+      text-align: center;
+    }
+    .video-info { padding: 13px; }
+    .caption { margin: 10px 0; line-height: 1.5; overflow-wrap: anywhere; }
+    .actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .actions button { padding: 9px 11px; background: #251632; }
+    .actions button.active { background: #963de1; }
+    .comments { margin-top: 12px; }
+    .comment-item {
+      padding: 9px;
+      border-bottom: 1px solid #332342;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+    .empty { text-align: center; color: #a99bb8; padding: 35px 10px; }
+    .hidden { display: none !important; }
+    .status { color: #d8a8ff; font-size: 13px; margin-top: 10px; }
+    .bottom-note { color: #877994; text-align: center; font-size: 11px; padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="logo">P!Vibes</div>
+      <div class="tagline">CREATE. FEEL. SHARE.</div>
+    </div>
+    <button id="refreshBtn">↻ Refresh</button>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <button id="feedBtn">▶ Feed</button>
+      <button id="uploadBtn" class="secondary">＋ Create</button>
+      <button id="flashBtn" class="secondary">✦ P!Flash</button>
+      <button id="profileBtn" class="secondary">◉ Profile</button>
+    </div>
+
+    <section id="feedSection">
+      <div class="panel">
+        <h2>🌍 Explore Vibes</h2>
+        <div class="hint">Discover videos from creators around the world.</div>
+      </div>
+      <div id="feedStatus" class="status"></div>
+      <div id="videoFeed">
+        <div class="empty">Login with Pi to explore P!Vibes.</div>
+      </div>
+      <button id="loadMoreBtn" class="secondary hidden">Load More Videos</button>
+    </section>
+
+    <section id="uploadSection" class="hidden">
+      <div class="panel">
+        <h2>＋ Create a Vibe</h2>
+        <label for="videoFile">Choose your video</label>
+        <input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime">
+        <div class="hint">Maximum file size: 50 MB. MP4 recommended. HD/4K depends on the original video.</div>
+        <video id="preview" class="hidden" controls playsinline style="width:100%;max-height:350px;margin-top:10px"></video>
+        <label for="videoCaption">Caption</label>
+        <textarea id="videoCaption" maxlength="1000" placeholder="Write something about your vibe..."></textarea>
+        <label for="visibility">Visibility</label>
+        <select id="visibility" style="width:100%;padding:12px;background:#090611;color:white;border:1px solid #49345b;border-radius:10px">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        <h2 style="margin-top:18px">✨ Caption Style</h2>
+        <select id="textAnimation" style="width:100%;padding:12px;background:#090611;color:white;border:1px solid #49345b;border-radius:10px">
+          <option value="none">Normal</option>
+          <option value="pop">Pop</option>
+          <option value="fade">Fade</option>
+          <option value="slide">Slide In</option>
+          <option value="zoom">Zoom</option>
+          <option value="bounce">Bounce</option>
+          <option value="typewriter">Typewriter</option>
+          <option value="neon">Neon Glow</option>
+          <option value="rainbow">Rainbow</option>
+          <option value="3d">3D Text</option>
+        </select>
+        <input id="captionColor" type="color" value="#ffffff" aria-label="Caption color">
+        <select id="captionPosition" style="width:100%;padding:12px;background:#090611;color:white;border:1px solid #49345b;border-radius:10px">
+          <option value="center">Center</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+        <button id="publishBtn" style="width:100%;margin-top:12px">Publish Vibe</button>
+        <div id="uploadStatus" class="status"></div>
+      </div>
+    </section>
+
+    <section id="flashSection" class="hidden">
+      <div class="panel">
+        <h2>✦ P!Flash</h2>
+        <div class="hint">Share a temporary moment with your followers.</div>
+        <input id="flashText" maxlength="500" placeholder="What's happening?">
+        <button id="publishFlashBtn">Share Flash</button>
+        <div id="flashStatus" class="status"></div>
+      </div>
+    </section>
+
+    <section id="profileSection" class="hidden">
+      <div class="panel">
+        <h2>◉ Creator Profile</h2>
+        <div id="creatorUid" class="hint">Pi UID will appear after login.</div>
+        <input id="creatorName" maxlength="40" placeholder="Display name">
+        <textarea id="creatorBio" maxlength="300" placeholder="Tell the world about yourself"></textarea>
+        <button id="saveProfileBtn">Save Profile</button>
+        <div id="profileStatus" class="status"></div>
+      </div>
+    </section>
+    <div class="bottom-note">P!Vibes · Powered by PISHADOW</div>
+  </main>
+
+  <script>
+    const API = {
+      feed: "/api/auth/feed",
+      media: "/api/auth/media",
+      complete: "/api/auth/media-complete",
+      posts: "/api/auth/vibes",
+      likes: "/api/auth/likes",
+      comments: "/api/auth/comments",
+      saves: "/api/auth/saves",
+      shares: "/api/auth/shares",
+      profile: "/api/auth/profile",
+      flash: "/api/auth/flash"
+    };
+
+    let currentUser = null;
+    let videos = [];
+    let offset = 0;
+    let selectedFile = null;
+    let previewUrl = null;
+
+    function token() {
+      return window.pishadowAccessToken || null;
+    }
+
+    async function apiRequest(url, data) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken: token(), ...data })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Request failed");
+      return result;
+    }
+
+    function requireLogin() {
+      if (!token()) {
+        alert("Please login with Pi on the main PISHADOW page first.");
+        return false;
+      }
+      return true;
+    }
+
+    function showSection(name) {
+      ["feed", "upload", "flash", "profile"].forEach(section => {
+        document.getElementById(section + "Section").classList.toggle(
+          "hidden", section !== name
+        );
+      });
+    }
+
+    document.getElementById("feedBtn").onclick = () => {
+      showSection("feed");
+      loadFeed(true);
+    };
+    document.getElementById("uploadBtn").onclick = () => {
+      if (requireLogin()) showSection("upload");
+    };
+    document.getElementById("flashBtn").onclick = () => {
+      if (requireLogin()) showSection("flash");
+    };
+    document.getElementById("profileBtn").onclick = async () => {
+      if (!requireLogin()) return;
+      showSection("profile");
+      await loadProfile();
+    };
+    document.getElementById("refreshBtn").onclick = () => loadFeed(true);
+
+    document.getElementById("videoFile").onchange = event => {
+      selectedFile = event.target.files[0] || null;
+      const preview = document.getElementById("preview");
+
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = null;
+      preview.classList.add("hidden");
+
+      if (!selectedFile) return;
+
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        alert("Video must be 50 MB or smaller.");
+        event.target.value = "";
+        selectedFile = null;
+        return;
+      }
+
+      if (!selectedFile.type.startsWith("video/")) {
+        alert("Please select a video file.");
+        event.target.value = "";
+        selectedFile = null;
+        return;
+      }
+
+      previewUrl = URL.createObjectURL(selectedFile);
+      preview.src = previewUrl;
+      preview.classList.remove("hidden");
+    };
+
+    document.getElementById("publishBtn").onclick = async () => {
+      if (!requireLogin() || !selectedFile) {
+        if (!selectedFile) alert("Please select a video first.");
+        return;
+      }
+
+      const status = document.getElementById("uploadStatus");
+      const button = document.getElementById("publishBtn");
+      button.disabled = true;
+
+      try {
+        status.textContent = "Preparing upload...";
+        const signed = await apiRequest(API.media, {
+          fileName: selectedFile.name,
+          mimeType: selectedFile.type,
+          fileSize: selectedFile.size
+        });
+
+        status.textContent = "Upload preparation received. TUS uploader integration is still required.";
+        console.log("Upload preparation:", signed);
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    };
+
+    async function loadFeed(reset = false) {
+      if (!requireLogin()) return;
+
+      const status = document.getElementById("feedStatus");
+      if (reset) {
+        offset = 0;
+        videos = [];
+        document.getElementById("videoFeed").innerHTML = "";
+      }
+
+      status.textContent = "Loading videos...";
+
+      try {
+        const result = await apiRequest(API.feed, { limit: 10, offset });
+        videos = videos.concat(result.videos || []);
+        offset += (result.videos || []).length;
+        renderFeed();
+        status.textContent = videos.length
+          ? ""
+          : "No public videos yet. Be the first creator!";
+        document.getElementById("loadMoreBtn").classList.toggle(
+          "hidden", !result.videos || result.videos.length < 10
+        );
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    }
+
+    function renderFeed() {
+      const feed = document.getElementById("videoFeed");
+      feed.innerHTML = "";
+
+      videos.forEach(video => {
+        const card = document.createElement("article");
+        card.className = "video-card";
+
+        const area = document.createElement("div");
+        area.className = "video-area";
+        const placeholder = document.createElement("div");
+        placeholder.className = "video-placeholder";
+        placeholder.textContent = "Video path: " + video.video_path +
+          " · Signed playback URL integration required";
+        area.appendChild(placeholder);
+
+        const info = document.createElement("div");
+        info.className = "video-info";
+
+        const creator = document.createElement("strong");
+        creator.textContent = "Creator: " + video.user_id;
+        const caption = document.createElement("div");
+        caption.className = "caption";
+        caption.textContent = video.caption || "";
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const like = document.createElement("button");
+        like.textContent = "💜 React";
+        like.onclick = () => react(video.id, "❤️");
+
+        const comment = document.createElement("button");
+        comment.textContent = "💬 Comment";
+        comment.onclick = () => addComment(video.id);
+
+        const save = document.createElement("button");
+        save.textContent = "🔖 Save";
+        save.onclick = () => saveVideo(video.id);
+
+        const share = document.createElement("button");
+        share.textContent = "↗ Share";
+        share.onclick = () => shareVideo(video.id);
+
+        actions.append(like, comment, save, share);
+        const commentList = document.createElement("div");
+        commentList.className = "comments";
+        commentList.id = "comments-" + video.id;
+
+        info.append(creator, caption, actions, commentList);
+        card.append(area, info);
+        feed.appendChild(card);
+      });
+    }
+
+    document.getElementById("loadMoreBtn").onclick = () => loadFeed(false);
+
+    async function react(id, emoji) {
+      try {
+        await apiRequest(API.likes, {
+          action: "react",
+          postId: id,
+          emoji
+        });
+        alert("Reaction sent 💜");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function addComment(id) {
+      const content = prompt("Write your comment:");
+      if (!content || !content.trim()) return;
+      try {
+        await apiRequest(API.comments, {
+          action: "create",
+          postId: id,
+          content: content.trim(),
+          animation: "pop"
+        });
+        alert("Comment sent 💜");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function saveVideo(id) {
+      try {
+        const result = await apiRequest(API.saves, {
+          action: "save",
+          vibeId: id
+        });
+        alert(result.message || "Saved");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function shareVideo(id) {
+      try {
+        const result = await apiRequest(API.shares, { vibeId: id });
+        if (navigator.share) {
+          await navigator.share({
+            title: "P!Vibes",
+            url: result.shareUrl
+          });
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(result.shareUrl);
+          alert("Share link copied");
+        } else {
+          prompt("Copy this share link:", result.shareUrl);
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function loadProfile() {
+      try {
+        const result = await apiRequest(API.profile, { action: "get" });
+        const profile = result.profile || {};
+        document.getElementById("creatorUid").textContent =
+          "Pi UID: " + (window.pishadowUid || "");
+        document.getElementById("creatorName").value =
+          profile.display_name || "";
+        document.getElementById("creatorBio").value = profile.bio || "";
+      } catch (error) {
+        document.getElementById("profileStatus").textContent = error.message;
+      }
+    }
+
+    document.getElementById("saveProfileBtn").onclick = async () => {
+      try {
+        const result = await apiRequest(API.profile, {
+          action: "update",
+          displayName: document.getElementById("creatorName").value,
+          bio: document.getElementById("creatorBio").value
+        });
+        document.getElementById("profileStatus").textContent =
+          result.success ? "Profile saved 💜" : "Could not save profile";
+      } catch (error) {
+        document.getElementById("profileStatus").textContent = error.message;
+      }
+    };
+
+    document.getElementById("publishFlashBtn").onclick = async () => {
+      const content = document.getElementById("flashText").value.trim();
+      if (!content) {
+        alert("Write something first.");
+        return;
+      }
+      try {
+        const result = await apiRequest(API.flash, {
+          action: "create",
+          flashType: "text",
+          content,
+          effect: "fade"
+        });
+        document.getElementById("flashStatus").textContent =
+          result.message || "Flash created";
+        document.getElementById("flashText").value = "";
+      } catch (error) {
+        document.getElementById("flashStatus").textContent = error.message;
+      }
+    };
+
+    // Reuse the Pi session created on the main PISHADOW page.
+    if (token()) loadFeed(true);
+  </script>
+</body>
+</html>
