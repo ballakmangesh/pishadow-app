@@ -301,8 +301,11 @@ async function loadFollowStats() {
     const result = await response.json();
 
     if (response.ok) {
-      document.getElementById("following-count").innerText =
-        result.followingCount;
+  document.getElementById("following-count").innerText =
+    result.followingCount;
+
+  document.getElementById("followers-count").innerText =
+    result.followersCount;
     }
   } catch (error) {
     console.error("Follow stats error:", error);
