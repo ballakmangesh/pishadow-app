@@ -59,7 +59,9 @@ export default async function handler(req, res) {
       });
 
       if (!response.ok) {
-        return res.status(500).json({ error: "Could not save follow" });
+  const errorText = await response.text();
+  console.error("Supabase follow error:", response.status, errorText);
+  return res.status(500).json({ error: "Could not save follow" });
       }
     } else if (action === "unfollow") {
       if (!followingId || followingId === followerId) {
