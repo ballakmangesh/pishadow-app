@@ -114,9 +114,7 @@ export default async function handler(req, res) {
     };
 
     const followingCount = await countQuery("follower_id", followerId);
-    const followersCount = followingId
-      ? await countQuery("following_id", followingId)
-      : 0;
+    const followersCount = await countQuery("following_id", followerId);
 
     return res.status(200).json({
       success: true,
