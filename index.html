@@ -193,7 +193,9 @@ Save Bio
   <div style="font-size:60px; margin:15px;">👤</div>
 
   <h3 id="profile-username">Username</h3>
- 
+ <p style="color:#bd70ff;">
+  My Pi UID: <span id="profile-uid">Loading...</span>
+ </p>
 
   <div style="color:#bd70ff; margin:20px;">
   <p>Followers: <span id="followers-count">0</span></p>
@@ -232,6 +234,7 @@ document.getElementById("pi-login").onclick = async function () {
     const result = await response.json();
     window.pishadowAccessToken = auth.accessToken;
 window.pishadowUid = result.uid;
+    document.getElementById("profile-uid").innerText = result.uid;
 
     if (!response.ok) {
       throw new Error(result.error || "Login failed");
